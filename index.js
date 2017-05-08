@@ -3,7 +3,7 @@ const request = require('request');
 const cheerio = require('cheerio');
 const fs = require('fs');
 
-let db = new PouchDB('kittens');
+let db = new PouchDB('elm');
 
 // db.info().then( (info) => console.log(info));
 
@@ -26,6 +26,7 @@ request("http://elm.umaryland.edu/", function(error, response, body) {
   const $ = cheerio.load(body);
 
   let articleIds = [];
+  let elmIds = { "_id": "elmIds" };
 
   $('#mpcth_page_articles > article').each(function(index) {
     articleIds.push($(this).attr('id'));
@@ -33,27 +34,12 @@ request("http://elm.umaryland.edu/", function(error, response, body) {
   });
 
   console.log('articleIds.legnth', articleIds.length);
-
-  // console.log('typeof(body)', typeof(body));
-  // console.log('typeof($)', typeof($));
-  // console.log('typeof(articleIds)', typeof(articleIds));
-  // console.log('articleIds', articleIds);
-  // fs.appendFileSync('articles.js', articles);
-
-  // let articleIds = articles.map( (article) => console.log(this) );
-
-  // console.log('body', body);
-
+  console.log('articleIds', articleIds);
   // fs.appendFileSync('elm.html', body);
 
-  // $('div#siteTable > div.link').each(function( index ) {
-  //   var title = $(this).find('p.title > a.title').text().trim();
-  //   var score = $(this).find('div.score.unvoted').text().trim();
-  //   var user = $(this).find('a.author').text().trim();
-  //   console.log("Title: " + title);
-  //   console.log("Score: " + score);
-  //   console.log("User: " + user);
-  //   fs.appendFileSync('reddit.txt', title + '\n' + score + '\n' + user + '\n');
-  // });
+  elmIds.ids = articleIds;
 
+  console.log('elmIds', elmIds);
+
+  db.put(elmIds);
 });
